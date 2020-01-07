@@ -1,0 +1,44 @@
+<div class="col-md-6 col-md-offset-3"> 
+{{#each result}}
+<h1>Products for {{this.name}} Category</h1>
+<div class="adduser-logoutbox">
+<h4><a class="productlink" href="/category/addproduct/{{this._id}}" cid="{{this._id}}">Add Product</a>
+</div>
+ {{/each}}
+<br>
+{{#if result}}
+<table class="table">
+    <thead>
+        <tr>
+            <td>Name</td>
+            <td>Description</td>            
+            <td>Edit</td>
+            <td>Delete</td>
+        </tr>
+
+    </thead>
+   <tbody class="tbody">
+        {{#each result}}
+        {{#each this.res}}
+        <tr>
+            <td>{{this.pname}}</td>
+            <td>{{this.pdescription}}</td>
+            <td><a href="/category/editproduct/{{this._id}}">Edit</a></td>
+           <td><a onclick="deletefunc('{{this._id}}')">Delete</a></td>
+        </tr>
+          {{/each}}
+        {{/each}}
+        
+   </tbody>
+</table>
+{{else}}
+<h2>No Product found</h2>
+{{/if}}
+</div>
+<script>
+function deletefunc(delid){
+    catid=$('.productlink').attr('cid')
+    location.href="/category/deleteProduct/"+delid+"/"+catid;
+}
+
+</script>
