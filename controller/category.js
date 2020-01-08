@@ -20,7 +20,7 @@ router.post('/add',(req,res)=>{
     // const _id = new mongo.ObjectID(req.session.passport.user);
     if(req.body.name=="" ||  req.body.description==""){
         req.flash('error', 'Please provide details.');
-        res.redirect('/category/add');
+        res.render('category/addoredit',{messages});
       }else{
         data={
             name:req.body.name,
@@ -67,7 +67,7 @@ router.get('/editproduct/:id',(req,res)=>{
 router.post('/update',(req,res)=>{
     if(req.body.name=="" ||  req.body.description==""){
         req.flash('error', 'Please provide details.');
-        res.redirect('/category/edit/'+req.body.catid);
+        res.redirect('/category/edit/'+req.body.catid,{messages});
     }else{
         var _id = new mongo.ObjectID(req.body.catid);
         // var categoryid =new mongo.ObjectID(req.body.catid)
