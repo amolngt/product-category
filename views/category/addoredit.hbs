@@ -2,7 +2,7 @@
 <h3><a href="/">All Categories</a></h3>
 {{> messages }}
 {{#if data}}
-<h3>Edit Category</h3>
+<h4>Edit Category</h4>
 {{#each data}}
 <form action="/category/update" method="post">
 <input type="hidden" value="{{this._id}}" name="catid">
@@ -18,7 +18,7 @@
 </form>
 {{/each}}
 {{else}}
-<h3>Add Category</h3>
+<h4>Add Category</h4>
 <form action="/category/add" method="post">
  <div class="form-group">
         <label for="name">Name:</label>

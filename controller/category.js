@@ -4,15 +4,6 @@ var categorymodel=require('../model/category');
 var mongo = require('mongodb');
 router.use(express.json())
 
-router.get('/',(req,res)=>{
-    // if (!req.isAuthenticated()) { 
-    //     res.redirect('/auth/login');
-    //   }
-    // usermodel.findUsersByAdmin(req.app.locals.db,req.session.passport.user).then(function(result){
-    //     res.render('employee/allusers',{result});
-    // })
-    
-});
 router.get('/add',(req,res)=>{
     res.render('category/addoredit');
 });
@@ -20,7 +11,7 @@ router.get('/addproduct/:id',(req,res)=>{
     const _id = new mongo.ObjectID(req.params.id);
     categorymodel.findCategory(req.app.locals.db,_id).then(function(data){  
         data[0].addproduct='true';       
-        console.log(data)
+      
         res.render('category/addoreditproduct',{data});
     })
 });
@@ -53,25 +44,46 @@ router.post('/addproduct',(req,res)=>{
             pdescription:req.body.pdescription
         }
         categorymodel.insertProduct(req.app.locals.db,data).then(function(err,result){            
-            res.redirect('/category/showproduct/'+req.body.catid)
+            res.redirect('/category/showproduct/'+req.body.catid+'/0')
         })
       }
 })
 
 router.get('/edit/:id',(req,res)=>{
     const _id = new mongo.ObjectID(req.params.id);
-    categorymodel.findCategory(req.app.locals.db,_id).then(function(data){        
-        res.render('category/addoreditproduct',{data:data});
+    categorymodel.findCategory(req.app.locals.db,_id).then(function(data){    
+        console.log(data)    
+        res.render('category/addoredit',{data:data});
     })
 })
 
 router.get('/editproduct/:id',(req,res)=>{
     const _id = new mongo.ObjectID(req.params.id);
-    categorymodel.findProdctCategory(req.app.locals.db,_id).then(function(data){    
-        console.log('finalllllll')
-        console.log(data)    
+    categorymodel.findProdctCategory(req.app.locals.db,_id).then(function(data){        
         res.render('category/addoreditproduct',{data});
     })
+})
+
+router.post('/update',(req,res)=>{
+    if(req.body.name=="" ||  req.body.description==""){
+        req.flash('error', 'Please provide details.');
+        res.redirect('/category/edit/'+req.body.catid);
+    }else{
+        var _id = new mongo.ObjectID(req.body.catid);
+        // var categoryid =new mongo.ObjectID(req.body.catid)
+        data={
+            name:req.body.name,
+            description:req.body.description,     
+            // catid:categoryid
+        }
+        
+      console.log(data)
+        categorymodel.updateCategory(req.app.locals.db,_id,data).then(function(err,result){    
+        
+            res.redirect('/')
+        })
+    }
+
 })
 
 router.post('/updateproduct',(req,res)=>{
@@ -86,10 +98,9 @@ router.post('/updateproduct',(req,res)=>{
             pdescription:req.body.pdescription,     
             catid:categoryid
         }
-        console.log(data)
         categorymodel.updateProduct(req.app.locals.db,_id,data).then(function(err,result){    
-            console.log(result)    
-            res.redirect('/category/showproduct/'+req.body.catid)
+        
+            res.redirect('/category/showproduct/'+req.body.catid+'/0')
         })
     }
 
@@ -105,14 +116,14 @@ router.get('/delete/:id',(req,res)=>{
 router.get('/deleteproduct/:id/:catid',(req,res)=>{
     const _id = new mongo.ObjectID(req.params.id);     
     categorymodel.deleteProduct(req.app.locals.db,_id).then(function(err,result){
-        res.redirect('/category/showproduct/'+req.params.catid)
+        res.redirect('/category/showproduct/'+req.params.catid+'/0')
     })
 })
 
-router.get('/showproduct/:id',(req,res)=>{
-    const _id = new mongo.ObjectID(req.params.id);     
-    categorymodel.findProductsForCategories(req.app.locals.db,_id).then(function(result){
-        console.log(result)
+router.get('/showproduct/:id/:page',(req,res)=>{
+    const _id = new mongo.ObjectID(req.params.id);   
+    categorymodel.findProductsForCategories(req.app.locals.db,_id,req.params.page).then(function(result){
+        
         res.render('category/allproducts',{result});
     })
 })

@@ -1,12 +1,13 @@
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <div class="col-md-6 col-md-offset-3"> 
-{{#each result}}
-<h1>Products for {{this.name}} Category</h1>
-<div class="adduser-logoutbox">
-<h4><a class="productlink" href="/category/addproduct/{{this._id}}" cid="{{this._id}}">Add Product</a>
-</div>
- {{/each}}
-<br>
 {{#if result}}
+<h4>Products for Category</h4>
+<div class="adduser-logoutbox">
+<h4><a class="productlink" href="">Add Product</a>
+</div>
+ {{/if}}
+<br>
+{{#if result.0.allrecords}}
 <table class="table">
     <thead>
         <tr>
@@ -18,27 +19,67 @@
 
     </thead>
    <tbody class="tbody">
-        {{#each result}}
-        {{#each this.res}}
+        {{#each result.0.allrecords}}
+      
         <tr>
             <td>{{this.pname}}</td>
             <td>{{this.pdescription}}</td>
             <td><a href="/category/editproduct/{{this._id}}">Edit</a></td>
            <td><a onclick="deletefunc('{{this._id}}')">Delete</a></td>
         </tr>
-          {{/each}}
+         
         {{/each}}
         
    </tbody>
 </table>
+{{#each result.0.countall}}
+<ul class="pagination" pagecount="{{this.count}}">
+  {{/each}}
+</ul>
 {{else}}
 <h2>No Product found</h2>
 {{/if}}
 </div>
 <script>
+    url=window.location.href;
+    arr=url.split('/');
+    $('.productlink').attr('href','/category/addproduct/'+arr[5]+'')
 function deletefunc(delid){
-    catid=$('.productlink').attr('cid')
+    catid=arr[5]
     location.href="/category/deleteProduct/"+delid+"/"+catid;
 }
-
+var totalrecords=$('.pagination').attr('pagecount');
+if(totalrecords>10){
+    catid=arr[5]
+    if (totalrecords % 10 == 0) 
+    {
+        var rec=(Math.floor(totalrecords/10));
+    }else{
+        var rec=(Math.floor(totalrecords/10))+1;
+    }
+    
+    str="";
+    for(i=0;i<rec;i++){       
+        str+='<li><a href="/category/showproduct/'+catid+'/'+i+'">'+i+'</a></li>';      
+    }
+    $('.pagination').html(str);
+}
 </script>
+<style>
+.pagination {
+  display: inline-block;
+}
+
+.pagination a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+}
+.pagination a.active {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.pagination a:hover:not(.active) {background-color: #ddd;}
+</style>

@@ -1,7 +1,7 @@
 <div class="col-md-6 col-md-offset-3"> 
-<h1>Category Master</h1>
+<h3>Category Master</h3>
 <div class="adduser-logoutbox">
-<h4><a href="category/add">Add Category</a>
+<h4><a href="category/add">Add Category</a></h4>
 </div>
 <br>
 {{#if result}}
@@ -22,7 +22,7 @@
             <td>{{this.description}}</td>
             <td><a href="category/edit/{{this._id}}">Edit</a></td>
            <td><a href="category/delete/{{this._id}}">Delete</a></td>
-           <td><a href="category/showproduct/{{this._id}}">Show Product</a></td>
+           <td><a href="category/showproduct/{{this._id}}/0">Show Product</a></td>
         </tr>
         {{/each}}
         

@@ -33,21 +33,46 @@ function findCategory(db,catid) {
     });
     
 }
-function findProductsForCategories(db,catid) {
+function findProductsForCategories(db,catid,page) {
+   
+    page=parseInt(page)
+    if(page!=0){
+        page=page*10
+    }
+    
     return new Promise(function(resolve, reject) {
-        db.collection('categorytb').aggregate([{
-            $lookup:{
-                from:"producttb",
-                localField:"_id",
-                foreignField:"catid",
-                as:"res"
-            }},{
-                $match: { "_id": catid}
-             }
-            ]).toArray(function(err, result) {        
-                resolve(result);        
-                });
+        
+        db.collection('producttb').aggregate([  
+            { '$facet': {
+                "allrecords": [
+                   
+                    {'$match' : {  "catid": catid },
+                  
+                   
+                    },{'$limit': page +10},
+                    {"$skip": page}
+                ],
+                "countall": [
+                   
+                    {"$match":{
+                        'catid':catid
+                        }},                  
+                   { $group: {
+                      _id: null, 
+                      count: {
+                        $sum: 1
+                      }
+                    }
+                }                    
+                ],
+                
+              }
+            }
+        
+        ]).toArray(function(err, result) {             
+                resolve(result);
             });
+        });
 }
 function findProdctCategory(db,catid) {
     return new Promise(function(resolve, reject) {
