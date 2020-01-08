@@ -20,8 +20,8 @@ var categoryconroller=require('./controller/category.js');
 const app=express();
 
 var mongojs = require('mongojs');
-// app.locals.db = mongojs("mongodb+srv://amol:amol@cluster0-0wbxn.mongodb.net/test?retryWrites=true&w=majority");
-app.locals.db = mongojs('localhost/mytestdb');
+app.locals.db = mongojs("mongodb+srv://amol:amol@cluster0-0wbxn.mongodb.net/test?retryWrites=true&w=majority");
+// app.locals.db = mongojs('localhost/mytestdb');
 
 app.set('views',path.join(__dirname,'/views'));
 app.engine('hbs',expresshbs({extname:'hbs',defaultLayout:'mainlayout',layoutsDir:__dirname+"/views/layouts/"}));
